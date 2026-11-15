@@ -1,13 +1,19 @@
 <?php
+require __DIR__ . '/funkcje.php';
+
 $firma = 'Szprycha';
 $rok = date('Y');
-$cennik = [
-    ['usluga' => 'Przegląd miejski', 'cena' => '120 zł'],
-    ['usluga' => 'Regulacja przerzutek', 'cena' => '80 zł'],
-    ['usluga' => 'Serwis hamulców', 'cena' => '70 zł'],
-    ['usluga' => 'Centrowanie koła', 'cena' => 'od 60 zł'],
-    ['usluga' => 'Wymiana dętki', 'cena' => '35 zł'],
-];
+
+$uslugi = [];
+$bladBazy = false;
+
+try {
+    require __DIR__ . '/baza.php';
+    $uslugi = $pdo->query('SELECT nazwa, cena FROM uslugi ORDER BY cena')->fetchAll();
+} catch (PDOException $e) {
+    error_log('Błąd bazy w index.php: ' . $e->getMessage());
+    $bladBazy = true;
+}
 ?>
 <!doctype html>
 <html lang="pl">
@@ -109,12 +115,18 @@ $cennik = [
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($cennik as $pozycja): ?>
+              <?php if ($bladBazy): ?>
                 <tr>
-                  <th scope="row"><?= htmlspecialchars($pozycja['usluga'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></th>
-                  <td class="num"><?= htmlspecialchars($pozycja['cena'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
+                  <td colspan="2">Cennik jest chwilowo niedostępny. Przepraszamy.</td>
                 </tr>
-              <?php endforeach; ?>
+              <?php else: ?>
+                <?php foreach ($uslugi as $usluga): ?>
+                  <tr>
+                    <th scope="row"><?= e($usluga['nazwa']) ?></th>
+                    <td class="num"><?= (int) $usluga['cena'] ?> zł</td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endif; ?>
             </tbody>
           </table>
           <p class="price-sheet__footnote" id="pricing-footnote">Cena obejmuje montaż; koszt dętki ustalamy przed pracą.</p>
@@ -143,8 +155,8 @@ $cennik = [
         </li>
       </ul>
       <div class="footer-bottom">
-        <p class="footer-brand"><?= htmlspecialchars($firma, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?> <span>·</span> Bydgoszcz</p>
-        <p>© <time datetime="<?= htmlspecialchars($rok, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>"><?= htmlspecialchars($rok, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></time> <?= htmlspecialchars($firma, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>. Mały serwis. Dużo dobrych kilometrów.</p>
+        <p class="footer-brand"><?= e($firma) ?> <span>·</span> Bydgoszcz</p>
+        <p>© <time datetime="<?= e($rok) ?>"><?= e($rok) ?></time> <?= e($firma) ?>. Mały serwis. Dużo dobrych kilometrów.</p>
       </div>
     </footer>
   </body>

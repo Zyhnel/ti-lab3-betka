@@ -11,3 +11,14 @@ Thumbs.db
 # Local logs and temporary files
 *.log
 *.tmp
+
+# Lab 3: database (never commit)
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+dane/*
+!dane/.htaccess
+*.pdf
