@@ -85,30 +85,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Logowanie — Szprycha</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    >
   </head>
-  <body>
-    <main>
-      <h1>Logowanie do panelu</h1>
+  <body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <span class="navbar-brand mb-0 h1">Szprycha · panel</span>
+        <a class="link-light text-decoration-none" href="index.php">Strona główna</a>
+      </div>
+    </nav>
 
-      <?php if ($blad !== ''): ?>
-        <p role="alert"><?= e($blad) ?></p>
-      <?php endif; ?>
+    <main class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <h1 class="h3 mb-3">Logowanie do panelu</h1>
 
-      <form method="post" action="login.php">
-        <?= csrf_pole() ?>
+          <?php if ($blad !== ''): ?>
+            <div class="alert alert-danger" role="alert"><?= e($blad) ?></div>
+          <?php endif; ?>
 
-        <p>
-          <label for="login">Login</label><br>
-          <input id="login" name="login" type="text" required autofocus value="<?= e($loginWartosc) ?>">
-        </p>
+          <form method="post" action="login.php">
+            <?= csrf_pole() ?>
 
-        <p>
-          <label for="haslo">Hasło</label><br>
-          <input id="haslo" name="haslo" type="password" required>
-        </p>
+            <div class="mb-3">
+              <label for="login" class="form-label">Login</label>
+              <input id="login" name="login" type="text" class="form-control" required autofocus value="<?= e($loginWartosc) ?>">
+            </div>
 
-        <button type="submit">Zaloguj</button>
-      </form>
+            <div class="mb-3">
+              <label for="haslo" class="form-label">Hasło</label>
+              <input id="haslo" name="haslo" type="password" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Zaloguj</button>
+          </form>
+        </div>
+      </div>
     </main>
   </body>
 </html>

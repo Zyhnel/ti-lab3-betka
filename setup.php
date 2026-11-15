@@ -70,14 +70,23 @@ try {
         $haslo = getenv('ADMIN_HASLO');
 
         if ($haslo === false || $haslo === '') {
-            if (function_exists('readline')) {
-                $haslo = readline('Podaj hasło administratora (min. 12 znaków): ');
-            } else {
-                fwrite(STDOUT, 'Podaj hasło administratora (min. 12 znaków): ');
-                $haslo = fgets(STDIN);
-                if ($haslo !== false) {
-                    $haslo = rtrim($haslo, "\r\n");
-                }
+            fwrite(STDOUT, 'Podaj hasło administratora (min. 12 znaków): ');
+
+            $terminal = stream_isatty(STDIN);
+
+            if ($terminal) {
+                shell_exec('stty -echo');
+            }
+
+            $haslo = fgets(STDIN);
+
+            if ($terminal) {
+                shell_exec('stty echo');
+                fwrite(STDOUT, "\n");
+            }
+
+            if ($haslo !== false) {
+                $haslo = rtrim($haslo, "\r\n");
             }
         }
 
