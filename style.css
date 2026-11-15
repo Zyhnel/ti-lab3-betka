@@ -16,6 +16,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -57,6 +58,7 @@ main,
   width: 42px;
   height: 30px;
   flex: 0 0 auto;
+  transform-origin: center;
 }
 
 .brand__name {
@@ -101,14 +103,33 @@ main,
 }
 
 .menu a {
+  position: relative;
   color: var(--ink);
   text-decoration: none;
   text-underline-offset: 0.25em;
   transition: color 160ms ease;
 }
 
+.menu a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  left: 0;
+  height: 1.5px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.33, 0.02, 0.28, 1);
+}
+
 .menu a:hover {
   color: var(--orange);
+}
+
+.menu a:hover::after,
+.menu a:focus-visible::after {
+  transform: scaleX(1);
 }
 
 .menu a:focus-visible,
@@ -295,6 +316,32 @@ h2 {
   background: rgb(40 90 67 / 5%);
 }
 
+.price-table tbody tr {
+  position: relative;
+}
+
+.price-table tbody tr::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(173 69 40 / 15%), rgb(173 69 40 / 0%));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 360ms cubic-bezier(0.33, 0.02, 0.28, 1);
+  pointer-events: none;
+}
+
+.price-table tbody tr:hover::after,
+.price-table tbody tr:focus-within::after {
+  transform: scaleX(1);
+}
+
+.price-table tbody th,
+.price-table tbody td {
+  position: relative;
+  z-index: 1;
+}
+
 .price-table .num {
   text-align: right;
   white-space: nowrap;
@@ -311,9 +358,30 @@ h2 {
 }
 
 .text-link {
+  position: relative;
+  display: inline-block;
   color: var(--green);
   font-weight: 700;
   text-underline-offset: 0.25em;
+}
+
+.text-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.2em;
+  left: 0;
+  height: 2px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 300ms cubic-bezier(0.33, 0.02, 0.28, 1);
+  pointer-events: none;
+}
+
+.text-link:hover::after,
+.text-link:focus-visible::after {
+  transform: scaleX(1);
 }
 
 .services__heading {
@@ -358,6 +426,12 @@ h2 {
 }
 
 .card {
+  --card-accent: var(--orange);
+  --lift: 0px;
+  --reveal-shift: 0px;
+  --reveal-rot: 0deg;
+  --rx: 0deg;
+  --ry: 0deg;
   position: relative;
   display: flex;
   flex: 1 1 260px;
@@ -366,16 +440,67 @@ h2 {
   padding: 26px;
   border: 1px solid var(--line);
   background: rgb(255 255 255 / 24%);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  translate: 0 var(--reveal-shift);
+  rotate: var(--reveal-rot);
+  transform: translateY(var(--lift));
+  transition: translate 700ms cubic-bezier(0.33, 0, 0.28, 1),
+    rotate 700ms cubic-bezier(0.33, 0, 0.28, 1),
+    opacity 640ms cubic-bezier(0.33, 0, 0.28, 1),
+    transform 300ms cubic-bezier(0.33, 0.02, 0.28, 1),
+    box-shadow 260ms cubic-bezier(0.33, 0.02, 0.28, 1);
+  transition-delay: calc(var(--i, 0) * 90ms), calc(var(--i, 0) * 90ms),
+    calc(var(--i, 0) * 90ms), 0s, 0s;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  background: var(--card-accent);
+  transform: scale(0);
+  pointer-events: none;
+}
+
+.card::before {
+  top: -1px;
+  left: -1px;
+  width: 3px;
+  height: calc(100% + 2px);
+  transform-origin: center top;
+  transition: transform 420ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.card::after {
+  left: -1px;
+  bottom: -1px;
+  width: calc(100% + 2px);
+  height: 3px;
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.65, 0, 0.35, 1) 60ms;
+}
+
+.card:hover::before,
+.card:hover::after,
+.card:focus-within::before,
+.card:focus-within::after {
+  transform: scale(1);
 }
 
 .card:hover,
 .card:focus-within {
-  transform: translateY(-6px);
-  box-shadow: 8px 8px 0 rgb(32 36 31 / 16%);
+  --lift: -7px;
+  box-shadow: 8px 8px 0 rgb(32 36 31 / 16%), 15px 15px 0 rgb(173 69 40 / 12%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card {
+    transform: perspective(920px) rotateX(var(--rx)) rotateY(var(--ry))
+      translateY(var(--lift));
+  }
 }
 
 .card--highlight {
+  --card-accent: var(--orange-light);
   border-color: var(--green);
   background: var(--green);
   color: var(--paper);
@@ -690,6 +815,170 @@ h2 {
   }
 }
 
+/* Motion — all of it gated behind .js and a no-preference setting */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero__copy > * {
+    animation: hero-rise 760ms cubic-bezier(0.33, 0, 0.28, 1) both;
+  }
+
+  .js .hero__copy > :nth-child(1) {
+    animation-delay: 60ms;
+  }
+
+  .js .hero__copy > :nth-child(2) {
+    animation: hero-wipe 900ms cubic-bezier(0.33, 0, 0.28, 1) 150ms both;
+  }
+
+  .js .hero__copy > :nth-child(3) {
+    animation-delay: 320ms;
+  }
+
+  .js .hero__copy > :nth-child(4) {
+    animation-delay: 440ms;
+  }
+
+  .js .hero-art {
+    animation: hero-ride 980ms cubic-bezier(0.2, 0.9, 0.25, 1.08) 280ms backwards;
+  }
+
+  .js .cards .card.reveal {
+    --reveal-shift: 30px;
+    --reveal-rot: var(--reveal-tilt, 0deg);
+    opacity: 0;
+  }
+
+  .js .cards .card.reveal.is-visible {
+    --reveal-shift: 0px;
+    --reveal-rot: 0deg;
+    opacity: 1;
+  }
+
+  .js .cards > li:nth-child(odd) .card {
+    --reveal-tilt: 1.1deg;
+  }
+
+  .js .cards > li:nth-child(even) .card {
+    --reveal-tilt: -0.9deg;
+  }
+
+  .js .price-table tbody tr.reveal {
+    opacity: 0;
+    transform: translateY(30px) rotate(var(--reveal-tilt, 0deg));
+    transition: opacity 640ms cubic-bezier(0.33, 0, 0.28, 1),
+      transform 700ms cubic-bezier(0.33, 0, 0.28, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  .js .price-table tbody tr.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+
+  .brand:hover .brand__mark,
+  .brand:focus-visible .brand__mark {
+    animation: brand-pedal 1100ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-wipe {
+    from {
+      opacity: 0;
+      clip-path: inset(-14% 100% -14% 0);
+      transform: translateY(14px);
+    }
+
+    55% {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 1;
+      clip-path: inset(-14% -12% -14% 0);
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-ride {
+    from {
+      opacity: 0;
+      transform: translateX(-15%) rotate(-3.5deg);
+    }
+
+    62% {
+      opacity: 1;
+      transform: translateX(1.2%) rotate(2.4deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0) rotate(1.5deg);
+    }
+  }
+
+  @keyframes brand-pedal {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+
+    18% {
+      transform: rotate(-7deg);
+    }
+
+    42% {
+      transform: rotate(5deg);
+    }
+
+    68% {
+      transform: rotate(-3deg);
+    }
+
+    86% {
+      transform: rotate(1.5deg);
+    }
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 30;
+      inset: 0 0 auto;
+      height: 3px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation-name: scroll-progress;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+
+    @keyframes scroll-progress {
+      from {
+        transform: scaleX(0);
+      }
+
+      to {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -701,5 +990,25 @@ h2 {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .js .hero__copy > *,
+  .js .hero-art,
+  .js .cards .card.reveal,
+  .js .price-table tbody tr.reveal,
+  .brand:hover .brand__mark,
+  .brand:focus-visible .brand__mark {
+    animation: none !important;
+  }
+
+  .js .hero__copy > *,
+  .js .hero-art,
+  .js .cards .card.reveal,
+  .js .price-table tbody tr.reveal {
+    opacity: 1;
+  }
+
+  body::before {
+    display: none;
   }
 }

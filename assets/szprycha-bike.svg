@@ -1,10 +1,96 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" fill="none">
   <title>Ilustracja zielonego roweru szosowego z pomarańczowymi detalami</title>
+  <style>
+    .spokes,
+    .sun-ring {
+      transform-box: view-box;
+      transform-origin: center;
+    }
+
+    .spokes--rear {
+      transform-origin: 186px 342px;
+      animation: wheel-spin 9s linear infinite;
+    }
+
+    .spokes--front {
+      transform-origin: 531px 342px;
+      animation: wheel-spin 8.2s linear infinite;
+    }
+
+    .sun-ring {
+      transform-origin: 559px 104px;
+      animation: sun-turn 48s linear infinite;
+    }
+
+    .wind {
+      animation: wind-drift 5.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .wind--right {
+      animation-direction: reverse;
+      animation-duration: 6.4s;
+    }
+
+    .chain {
+      animation: chain-flow 1.1s linear infinite;
+    }
+
+    @keyframes wheel-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes sun-turn {
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+
+    @keyframes wind-drift {
+      0% {
+        opacity: 0;
+        transform: translateX(0);
+      }
+
+      22% {
+        opacity: 0.85;
+      }
+
+      68% {
+        opacity: 0.85;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateX(16px);
+      }
+    }
+
+    @keyframes chain-flow {
+      to {
+        stroke-dashoffset: -26;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spokes--rear,
+      .spokes--front,
+      .sun-ring,
+      .wind,
+      .chain {
+        animation: none;
+      }
+    }
+  </style>
   <rect width="720" height="540" fill="#E9E2D1"/>
   <path d="M0 424C111 399 216 444 327 421c111-23 241-32 393-5v124H0V424Z" fill="#D8D5C4"/>
   <circle cx="559" cy="104" r="51" fill="#D85A36"/>
-  <circle cx="559" cy="104" r="68" stroke="#285A43" stroke-width="2" stroke-dasharray="3 9"/>
-  <path d="M71 116h119M92 133h71M581 210h71M568 228h44" stroke="#858B79" stroke-width="3" stroke-linecap="round"/>
+  <circle class="sun-ring" cx="559" cy="104" r="68" stroke="#285A43" stroke-width="2" stroke-dasharray="3 9"/>
+  <g stroke="#858B79" stroke-width="3" stroke-linecap="round">
+    <path class="wind" d="M71 116h119M92 133h71"/>
+    <path class="wind wind--right" d="M581 210h71M568 228h44"/>
+  </g>
   <path d="M105 405H636" stroke="#20241F" stroke-width="4" stroke-linecap="round"/>
 
   <!-- Hand-drawn wheels and spokes -->
@@ -13,8 +99,12 @@
   <circle cx="531" cy="342" r="121" stroke="#20241F" stroke-width="13"/>
   <circle cx="531" cy="342" r="106" stroke="#285A43" stroke-width="2"/>
   <g stroke="#858B79" stroke-width="2">
-    <path d="m186 342-86-62m86 62-23-103m23 103 59-87m-59 87 104 2m-104-2-58 89m58-89-14 105m14-105-98 36m98-36 95 47"/>
-    <path d="m531 342-76-72m76 72-19-105m19 105 68-81m-68 81 103-12m-103 12-49 92m49-92 20 103m-20-103-100 36m100-36 95 46"/>
+    <g class="spokes spokes--rear">
+      <path d="m186 342-86-62m86 62-23-103m23 103 59-87m-59 87 104 2m-104-2-58 89m58-89-14 105m14-105-98 36m98-36 95 47"/>
+    </g>
+    <g class="spokes spokes--front">
+      <path d="m531 342-76-72m76 72-19-105m19 105 68-81m-68 81 103-12m-103 12-49 92m49-92 20 103m-20-103-100 36m100-36 95 46"/>
+    </g>
   </g>
   <circle cx="186" cy="342" r="8" fill="#D85A36"/>
   <circle cx="531" cy="342" r="8" fill="#D85A36"/>
@@ -28,7 +118,7 @@
   </g>
   <circle cx="346" cy="342" r="29" stroke="#D85A36" stroke-width="7"/>
   <circle cx="346" cy="342" r="5" fill="#D85A36"/>
-  <path d="M187 342h159m-44-143 44 143m70-128-70 128" stroke="#D85A36" stroke-width="2" stroke-dasharray="5 8"/>
+  <path class="chain" d="M187 342h159m-44-143 44 143m70-128-70 128" stroke="#D85A36" stroke-width="2" stroke-dasharray="5 8"/>
 
   <!-- Small maker's marks -->
   <path d="M78 468h72m420 0h73" stroke="#285A43" stroke-width="3" stroke-linecap="round"/>
