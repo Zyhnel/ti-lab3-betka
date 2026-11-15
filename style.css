@@ -838,7 +838,37 @@ h2 {
   }
 
   .js .hero-art {
-    animation: hero-ride 980ms cubic-bezier(0.2, 0.9, 0.25, 1.08) 280ms backwards;
+    animation: hero-ride 1280ms cubic-bezier(0.2, 0.9, 0.25, 1.08) 280ms
+        backwards,
+      hero-fade 790ms cubic-bezier(0.33, 0, 0.28, 1) 280ms backwards;
+  }
+
+  .js .site-header .brand {
+    animation: header-drop 600ms cubic-bezier(0.33, 0, 0.28, 1) both;
+  }
+
+  @media (min-width: 601px) {
+    .js .site-header .menu a {
+      animation: header-drop 600ms cubic-bezier(0.33, 0, 0.28, 1) both;
+    }
+
+    .js .site-header .menu a:nth-child(1) {
+      animation-delay: 120ms;
+    }
+
+    .js .site-header .menu a:nth-child(2) {
+      animation-delay: 210ms;
+    }
+
+    .js .site-header .menu a:nth-child(3) {
+      animation-delay: 300ms;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .js .site-header .menu-toggle {
+      animation: header-drop 600ms cubic-bezier(0.33, 0, 0.28, 1) 120ms both;
+    }
   }
 
   .js .cards .card.reveal {
@@ -864,14 +894,40 @@ h2 {
   .js .price-table tbody tr.reveal {
     opacity: 0;
     transform: translateY(30px) rotate(var(--reveal-tilt, 0deg));
-    transition: opacity 640ms cubic-bezier(0.33, 0, 0.28, 1),
-      transform 700ms cubic-bezier(0.33, 0, 0.28, 1);
+    transition: opacity 790ms cubic-bezier(0.33, 0, 0.28, 1),
+      transform 850ms cubic-bezier(0.33, 0, 0.28, 1);
     transition-delay: calc(var(--i, 0) * 90ms);
   }
 
   .js .price-table tbody tr.reveal.is-visible {
     opacity: 1;
     transform: translateY(0) rotate(0deg);
+  }
+
+  .js .pricing__intro > .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms cubic-bezier(0.33, 0, 0.28, 1),
+      transform 700ms cubic-bezier(0.33, 0, 0.28, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  .js .pricing__intro > .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .js .site-footer .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 600ms cubic-bezier(0.33, 0, 0.28, 1),
+      transform 600ms cubic-bezier(0.33, 0, 0.28, 1);
+    transition-delay: calc(var(--i, 0) * 100ms);
+  }
+
+  .js .site-footer .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .brand:hover .brand__mark,
@@ -911,18 +967,37 @@ h2 {
 
   @keyframes hero-ride {
     from {
-      opacity: 0;
       transform: translateX(-15%) rotate(-3.5deg);
     }
 
     62% {
-      opacity: 1;
       transform: translateX(1.2%) rotate(2.4deg);
     }
 
     to {
-      opacity: 1;
       transform: translateX(0) rotate(1.5deg);
+    }
+  }
+
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes header-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -994,8 +1069,13 @@ h2 {
 
   .js .hero__copy > *,
   .js .hero-art,
+  .js .site-header .brand,
+  .js .site-header .menu a,
+  .js .site-header .menu-toggle,
   .js .cards .card.reveal,
   .js .price-table tbody tr.reveal,
+  .js .pricing__intro > .reveal,
+  .js .site-footer .reveal,
   .brand:hover .brand__mark,
   .brand:focus-visible .brand__mark {
     animation: none !important;
@@ -1003,9 +1083,22 @@ h2 {
 
   .js .hero__copy > *,
   .js .hero-art,
+  .js .site-header .brand,
+  .js .site-header .menu a,
+  .js .site-header .menu-toggle,
   .js .cards .card.reveal,
-  .js .price-table tbody tr.reveal {
+  .js .price-table tbody tr.reveal,
+  .js .pricing__intro > .reveal,
+  .js .site-footer .reveal {
     opacity: 1;
+  }
+
+  .js .site-header .brand,
+  .js .site-header .menu a,
+  .js .site-header .menu-toggle,
+  .js .pricing__intro > .reveal,
+  .js .site-footer .reveal {
+    transform: none;
   }
 
   body::before {

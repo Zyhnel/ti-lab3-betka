@@ -100,6 +100,16 @@ const initScrollReveal = () => {
     items.push(row);
   });
 
+  const footerBlocks = document.querySelectorAll(
+    '.site-footer .footer-heading, .site-footer .contact-grid, .site-footer .footer-bottom',
+  );
+
+  footerBlocks.forEach((block, index) => {
+    block.style.setProperty('--i', String(index));
+    block.classList.add('reveal');
+    items.push(block);
+  });
+
   if (!items.length) {
     return;
   }
@@ -131,12 +141,63 @@ const initScrollReveal = () => {
           return;
         }
 
+        if (entry.target.closest('.site-footer')) {
+          footerBlocks.forEach((block) => {
+            block.classList.add('is-visible');
+            current.unobserve(block);
+          });
+          return;
+        }
+
         entry.target.classList.add('is-visible');
         countPricesIn(entry.target);
         current.unobserve(entry.target);
       });
     },
     { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
+  );
+
+  items.forEach((item) => observer.observe(item));
+};
+
+const initPricingReveal = () => {
+  const items = Array.from(document.querySelectorAll('.pricing__intro > *'));
+
+  if (!items.length) {
+    return;
+  }
+
+  items.forEach((item, index) => {
+    item.style.setProperty('--i', String(index));
+    item.classList.add('reveal');
+  });
+
+  const showAll = () => {
+    items.forEach((item) => item.classList.add('is-visible'));
+  };
+
+  if (reducedMotion.matches) {
+    showAll();
+    return;
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    showAll();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries, current) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        entry.target.classList.add('is-visible');
+        current.unobserve(entry.target);
+      });
+    },
+    { rootMargin: '0px 0px -50% 0px', threshold: 0 },
   );
 
   items.forEach((item) => observer.observe(item));
@@ -184,4 +245,5 @@ const initCardTilt = () => {
 };
 
 initScrollReveal();
+initPricingReveal();
 initCardTilt();
